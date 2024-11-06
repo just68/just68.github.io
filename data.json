@@ -1,0 +1,23 @@
+{
+  "navSections": [
+    {
+      "sectionTitle": "HOME"
+    },
+    {
+      "sectionTitle": "HTML"
+    },
+    {
+      "sectionTitle": "CSS"
+    },
+    {
+      "sectionTitle": "JavaScript"
+    }
+  ],
+  "pages": [
+    {
+      "sectionId": "0",
+      "link": "pages/home/",
+      "title": "Home"
+    }
+  ]
+}

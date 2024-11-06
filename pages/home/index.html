@@ -1,0 +1,58 @@
+
+<div id="pageWrapper">
+    <div id="textWrapper">
+        <p id="greeting">Hello everybody!</p>
+        <p id="text">This site is my knowledge base, which I gain by studying web development on my own. Here you can find templates, examples, as well as my projects dedicated to website development. I hope it will be useful for you to study everything that is here. I allow you to watch all the code that you will find on this site :)</p>
+        <p id="withRespect">For the community of the GitHub from <a href="https://github.com/mikhv" target="_blank">mikhv</a>.</p>
+    </div>
+</div>
+<style>
+        #pageWrapper {
+          flex-grow: 1; /* ! */
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-family: inherit;
+          font-optical-sizing: auto;
+          font-weight: 400;
+          font-style: normal;
+        }
+
+        #textWrapper {
+          width: 100%;
+          max-width: 650px;
+          margin: 0 auto;
+          padding: 0 1.5em;
+        }
+
+        #greeting {
+          text-align: center;
+          font-size: 2.5em;
+          margin-bottom: 1em;
+        }
+
+        #text, #withRespect {
+          font-size: 1.25em;
+        }
+
+        #text {
+          margin: 0.75em 0;
+        }
+
+        #withRespect {
+          text-align: end;
+          margin-top: 1em;
+        }
+        @media (max-width: 460px) {
+          #textWrapper {
+            padding: 0;
+          }
+          #greeting {
+            margin-bottom: 0.6em;
+            font-size: 2em;
+          }
+          #text, #withRespect {
+            font-size: 0.9em;
+          }
+        }
+</style>
