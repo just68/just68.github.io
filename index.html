@@ -1,11 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon/favicon-16x16.png">
+    <link rel="manifest" href="assets/icons/favicon/site.webmanifest">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/pages_style.css">
+    <link rel="stylesheet" class="page-link-elem">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>It's just a website</title>
+    <title>It`s just a website</title>
 </head>
 <body>
-    <script src="scripts/index.js"></script>
+    <header>
+        <div class="header-inner">
+            <div class="header-inner__sidebar-toggle">
+                <img src="assets/icons/close_menu_icon_24.svg" alt class="sidebar-toggle__icon sidebar-toggle__close-icon">
+                <img src="assets/icons/menu_icon_24.svg" alt class="sidebar-toggle__icon sidebar-toggle__open-icon">
+            </div>
+            <p class="header-inner__logo">JUST A WEBSITE</p>
+        </div>
+        <div class="header-inner-shadow"></div>
+    </header>
+    <main>
+        <aside class="sidebar">
+            <div class="sidebar__section">
+                <p class="sidebar-section__title">Navigation</p>
+                <nav class="sidebar-section__inner nav"></nav>
+                <p class="sidebar-section__info">sections are updated over time</p>
+            </div>
+        </aside>
+        <div class="sidebar-shadow"></div>
+        <div class="page-wrapper">
+            <div class="page-wrapper__page">
+                <p class="page-wrapper__page-title"></p>
+                <div class="page-wrapper__page-content"></div>
+            </div>
+            <footer>
+                <p class="copyright">&copy; Just the most banal footer in 2025</p>
+            </footer>
+        </div>
+    </main>
+    <script src="scripts/index.js" type="module"></script>
 </body>
 </html>

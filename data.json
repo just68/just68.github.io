@@ -1,23 +1,30 @@
 {
-  "navSections": [
+  "nav_sections": [
     {
-      "sectionTitle": "HOME"
+      "section_title": "HOME"
     },
     {
-      "sectionTitle": "HTML"
+      "section_title": "test"
     },
     {
-      "sectionTitle": "CSS"
-    },
-    {
-      "sectionTitle": "JavaScript"
+      "section_title": "empty"
     }
   ],
   "pages": [
     {
-      "sectionId": "0",
-      "link": "pages/home/",
-      "title": "Home"
+      "title": "Home",
+      "url": "pages/home/",
+      "section_id": "0"
+    },
+    {
+      "title": "Test page",
+      "url": "pages/test/",
+      "section_id": "1"
+    },
+    {
+      "title": "Some site (www.google.com)",
+      "url": "https://www.google.com",
+      "section_id": "1"
     }
   ]
 }

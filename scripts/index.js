@@ -1,171 +1,236 @@
-fetch('/data.json', {method: "GET"})
-.then(response => {
-    if (response.ok) {
-        return response.json()
+import {fetchJSON} from './modules/fetch_json.js';
+import {fetchHTML} from './modules/fetch_html.js';
+
+function fixElementsSizes(elems) {
+    function updateSizes() {
+        elems['header_inner_shadow'].style.height = elems['header_inner'].offsetHeight + 'px';
+        elems['sidebar'].style.height = window.innerHeight - elems['header_inner'].offsetHeight + 'px';
+        elems['sidebar'].style.top = elems['header_inner'].offsetHeight + 'px';
+        elems['page'].style.minHeight = window.innerHeight - elems['header_inner'].offsetHeight + 'px';
     }
-})
-.then(json => {
-    initPage(json);
-})
-.catch(error => {
-    showError(error);
-})
 
-function initPage(JSONdata) {
-    fetch('/main.html', {method: "GET"})
-    .then(response => {
-        return response.text()
-    })
-    .then(html => {
-        document.head.innerHTML += `<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/styles.css">`;
-        document.body.innerHTML = html;
-        const data = JSONdata;
-        let currentPageID = sessionStorage.getItem('currentPageID') == undefined ? 0 : sessionStorage.getItem('currentPageID');
-        let currentPageTitle = data[Object.keys(data)[1]][currentPageID].title;
-        let currentPageLink = data[Object.keys(data)[1]][currentPageID].link + 'index.html';
-        createPage(document.querySelector('#page'), ['pageTitle', 'pageContent']);
-        showPage(document.querySelector('#pageTitle'), document.querySelector('#pageContent'), currentPageTitle, currentPageLink);
-        createNavSections(document.querySelector('#nav'), data[Object.keys(data)[0]], ['nav-list', 'nav-list-title', 'nav-list-inner']);
-        fillNavSections(document.querySelectorAll('.nav-list-inner'), data[Object.keys(data)[1]], ['nav-list-item']);
-        fillEmptyNavSections(document.querySelectorAll('.nav-list-inner'), ['nav-list-item', 'inactive-nav-list-item']);
-    })
-    .catch(error => {
-        showError(error);
-    })
+    updateSizes();
+    window.addEventListener('resize', updateSizes);
 }
 
-function showError(errorMessage) {
-    document.write(`Network error: reload page (${errorMessage})`);
+function showPage(pagesData, currentPageID, titleElem, contentElem, linkElem) {
+    const CURRENT_PAGE_DATA = pagesData[currentPageID];
+
+    fetchHTML(CURRENT_PAGE_DATA['url']).then(html => {
+        if (html) {
+            titleElem.innerHTML = CURRENT_PAGE_DATA.title;
+            contentElem.innerHTML = html;
+            linkElem.href = CURRENT_PAGE_DATA['url'] + 'styles.css';
+            window.history.replaceState({'page_id': currentPageID}, CURRENT_PAGE_DATA['title'], `?page_id=${currentPageID}`);
+        }
+    });
 }
 
-function createPage(pageElem, idList) {
-    const pageTitle = document.createElement('p');
-    pageTitle.id = idList[0];
-    const pageContent = document.createElement('div');
-    pageContent.id = idList[1];
-    pageElem.appendChild(pageTitle);
-    pageElem.appendChild(pageContent);
-}
+function createNavSections(sectionsData, navElem, classList) {
+    for (let i = 0; i < sectionsData.length; i++) {
+        const SECTION_TITLE = sectionsData[i]['section_title'];
 
-function showPage(titleElem, contentElem, title, link) {
-    titleElem.innerHTML = title;
-    fetch(link, {method: "GET"})
-    .then(response => {
-        return response.text()
-    })
-    .then(html => {
-        fixPageContentHeight(document.querySelector('header'), document.querySelector('main'));
-        initSidebarMove(document.querySelector('#page'), document.querySelector('#sidebar'), document.querySelector('#sidebarToggle'), document.querySelector('#sidebarToggleIcon'));
-        contentElem.innerHTML = html;
-    })
-    .catch(error => {
-        showError(error);
-    })
-}
+        const NAV_SECTION_ELEM = document.createElement('div');
+        const NAV_SECTION_TITLE_ELEM = document.createElement('p');
+        const NAV_SECTION_LIST_ELEM = document.createElement('ol');
 
-function fixPageContentHeight(headerElem, contentElem) {
-    contentElem.style.minHeight = `calc(100vh - ${headerElem.offsetHeight}px)`;
-}
+        NAV_SECTION_ELEM.classList.add(classList[0]);
+        NAV_SECTION_TITLE_ELEM.classList.add(classList[1]);
+        NAV_SECTION_LIST_ELEM.classList.add(classList[2]);
 
-function createNavSections(navElem, data, classList) {
-    for (let i = 0; i < data.length; i++) {
-        let navSection = document.createElement('div');
-        navSection.classList.add(classList[0]);
-        let navSectionTitle = document.createElement('p');
-        navSectionTitle.classList.add(classList[1]);
-        let navSectionList = document.createElement('ol');
-        navSectionList.classList.add(classList[2]);
-        navElem.appendChild(navSection);
-        navSection.appendChild(navSectionTitle);
-        navSection.appendChild(navSectionList);
-        navSectionTitle.innerHTML = data[i][Object.keys(data[i])[0]];
+        navElem.appendChild(NAV_SECTION_ELEM);
+        NAV_SECTION_ELEM.appendChild(NAV_SECTION_TITLE_ELEM);
+        NAV_SECTION_ELEM.appendChild(NAV_SECTION_LIST_ELEM);
+
+        NAV_SECTION_TITLE_ELEM.innerHTML = SECTION_TITLE;
     }
 }
 
-function fillNavSections(navListsElem, data, classList) {
-    for (let i = 0; i < data.length; i++) {
-        let navListItem = document.createElement('li');
-        navListItem.classList.add(classList[0]);
-        navListsElem[Number(data[i][Object.keys(data[i])[0]])].appendChild(navListItem);
-        navListItem.innerHTML = data[i][Object.keys(data[i])[2]];
-        navListItem.addEventListener('click', function() {
-            let pageTitle = data[i].title;
-            let pageLink = data[i].link + 'index.html';
-            showPage(document.querySelector('#pageTitle'), document.querySelector('#pageContent'), pageTitle, pageLink);
-            sessionStorage.setItem('currentPageID', i);
+function fillNavSections(pagesData, navListElems, classList, pageElems) {
+    for (let i = 0; i < pagesData.length; i++) {
+        const NAV_LIST_ITEM = document.createElement('li');
+        NAV_LIST_ITEM.classList.add(classList[0]);
+        navListElems[pagesData[i]['section_id']].appendChild(NAV_LIST_ITEM);
+        NAV_LIST_ITEM.innerHTML = pagesData[i]['title'];
+
+        NAV_LIST_ITEM.addEventListener('click', function() {
+            if (pagesData[i]['url'].substring(0, 4) === 'http') {
+                window.open(pagesData[i]['url'], '_blank');
+            } else {
+                showPage(
+                    pagesData,
+                    i,
+                    pageElems.titleElem,
+                    pageElems.contentElem,
+                    pageElems.linkElem,
+                );
+            }
         });
     }
 }
-function fillEmptyNavSections(navListsElem, classList) {
-    for (let i = 0; i < navListsElem.length; i++) {
-        if (navListsElem[i].innerHTML == "") {
-            let navListItem = document.createElement('li');
+
+function fillEmptyNavSections(navListElems, classList) {
+    for (let i = 0; i < navListElems.length; i++) {
+        if (navListElems[i].innerHTML == "") {
+            const navListItem = document.createElement('li');
             navListItem.classList.add(classList[0]);
-            navListItem.classList.add(classList[1]);
-            navListsElem[i].appendChild(navListItem);
+            navListElems[i].appendChild(navListItem);
             navListItem.innerHTML = '<i>nothing yet</i>';
         }
     }
 }
 
-function initSidebarMove(content, sidebar, sidebarToggle, sidebarToggleIcon) {
+function initSidebarMove(sidebar, sidebarShadow, sidebarToggle, sidebarOpenIcon, sidebarCloseIcon) {
     let isOnSmallScreen;
-    let isSidebarOpened;
+    let isSidebarOpened = sessionStorage.getItem('isSidebarOpened') === 'true';
+
     function toggleDefaultSidebarPos() {
         isOnSmallScreen = document.documentElement.clientWidth > 1000 ? false : true;
-        if (isOnSmallScreen) {
-            closeSidebar();
+        if (sessionStorage.getItem('isSidebarOpened') === null) {
+            isSidebarOpened = isOnSmallScreen ? true : false;
+            sessionStorage.setItem('isSidebarOpened', isSidebarOpened);
         } else {
+            isSidebarOpened = sessionStorage.getItem('isSidebarOpened') === 'true';
+        }
+
+        setDefaultSidebarToggleIconPos();
+        if (isSidebarOpened) {
             openSidebar();
+        } else {
+            closeSidebar();
         }
     }
+
     toggleDefaultSidebarPos();
     window.addEventListener('resize', toggleDefaultSidebarPos);
     sidebarToggle.addEventListener('click', toggleSidebar);
+
     function toggleSidebar() {
         if (isSidebarOpened) {
             closeSidebar();
         } else {
             openSidebar();
         }
+        sessionStorage.setItem('isSidebarOpened', isSidebarOpened);
     }
-    function openSidebar() {
-        sidebarToggleIcon.style.opacity = 0;
-        sidebarToggleIcon.src = 'src/icons/close_menu_icon_24.svg';
-        sidebarToggleIcon.style.opacity = 1;
-        sidebar.style.left = 0;
-        if (isOnSmallScreen) {
-            content.style.marginLeft = sidebarToggle.offsetWidth + 'px';
-            console.log(content.style.marginLeft)
+
+    function setDefaultSidebarToggleIconPos() {
+        if (isSidebarOpened) {
+            sidebarCloseIcon.style.transform = 'translateX(0)';
+            sidebarOpenIcon.style.transform = 'translateX(100%)';
         } else {
-            content.style.marginLeft = sidebar.offsetWidth + 'px';
-            console.log(content.style.marginLeft)
+            sidebarCloseIcon.style.transform = 'translateX(-100%)';
+            sidebarOpenIcon.style.transform = 'translateX(-100%)';
+        }
+    }
+
+    function openSidebar() {
+        sidebarToggle.style.border = '2px solid rgb(0, 0, 0)';
+        sidebarCloseIcon.style.transform = 'translateX(0)';
+        sidebarOpenIcon.style.transform = 'translateX(100%)';
+        setTimeout(function() {
+            sidebarToggle.style.border = '2px solid rgb(255, 255, 255)';
+        }, 200);
+        sidebar.style.left = '0';
+        if (isOnSmallScreen) {
+            sidebarShadow.style.width = '0';
+        } else {
+            sidebarShadow.style.width = sidebar.offsetWidth  + 'px';
         }
         isSidebarOpened = true;
     }
+
     function closeSidebar() {
-        sidebarToggleIcon.style.opacity = 0;
-        sidebarToggleIcon.src = 'src/icons/menu_icon_24.svg';
-        sidebarToggleIcon.style.opacity = 1;
-        sidebar.style.left = -sidebar.clientWidth + sidebarToggle.offsetWidth + 'px';
-        if (isOnSmallScreen) {
-            content.style.marginLeft = sidebarToggle.offsetWidth + 'px';
-            console.log(content.style.marginLeft)
-        } else {
-            content.style.marginLeft = sidebarToggle.offsetWidth + 'px';
-            console.log(content.style.marginLeft)
-        }
+        sidebarToggle.style.border = '2px solid rgb(0, 0, 0)';
+        sidebarCloseIcon.style.transform = 'translateX(-100%)';
+        sidebarOpenIcon.style.transform = 'translateX(-100%)';
+        setTimeout(function() {
+            sidebarToggle.style.border = '2px solid rgb(255, 255, 255)';
+        }, 200);
+        sidebar.style.left = -sidebar.offsetWidth + 'px';
+        sidebarShadow.style.width = '0';
         isSidebarOpened = false;
     }
 }
 
-function fixSidebarWidth() {
+document.addEventListener("DOMContentLoaded", () => {
+    const HTML_ELEMS = {
+        elemsToFix: {
+            header_inner: document.querySelector('.header-inner'),
+            header_inner_shadow: document.querySelector('.header-inner-shadow'),
+            sidebar: document.querySelector('.sidebar'),
+            page: document.querySelector('.page-wrapper__page')
+        },
+        page_link: document.querySelector('.page-link-elem'),
+        nav: document.querySelector('.nav'),
+        page_title: document.querySelector('.page-wrapper__page-title'),
+        page_content: document.querySelector('.page-wrapper__page-content'),
+        nav_link_lists: '',
+    }
 
-}
+    fixElementsSizes(HTML_ELEMS.elemsToFix);
 
-function fixSidebarHeight() {
+    fetchJSON('/data.json').then(json => {
+        if (json) {
+            const DATA = json;
+            const NAV_SECTIONS_DATA = DATA[Object.keys(DATA)[0]];
+            const PAGES_DATA = DATA[Object.keys(DATA)[1]];
 
-}
+            let currentURL = new URL(window.location);
+            let currentPageID = currentURL.searchParams.get('page_id') == undefined ? 0 : currentURL.searchParams.get('page_id');
+
+            showPage(
+                PAGES_DATA,
+                currentPageID,
+                HTML_ELEMS.page_title,
+                HTML_ELEMS.page_content,
+                HTML_ELEMS.page_link,
+            );
+
+            window.addEventListener("popstate", () => {
+                currentURL = new URL(window.location);
+                currentPageID = currentURL.searchParams.get('page_id') == undefined ? 0 : currentURL.searchParams.get('page_id');
+
+                showPage(
+                    PAGES_DATA,
+                    currentPageID,
+                    HTML_ELEMS.page_title,
+                    HTML_ELEMS.page_content,
+                    HTML_ELEMS.page_link,
+                );
+            });
+
+            createNavSections(
+                NAV_SECTIONS_DATA,
+                HTML_ELEMS.nav,
+                ['nav-list', 'nav-list__title', 'nav-list__inner']
+            );
+
+            HTML_ELEMS.nav_link_lists = document.querySelectorAll('.nav-list__inner');
+
+            fillNavSections(
+                PAGES_DATA,
+                HTML_ELEMS.nav_link_lists,
+                ['nav-list__inner-item'],
+                {
+                    titleElem: HTML_ELEMS.page_title,
+                    contentElem: HTML_ELEMS.page_content,
+                    linkElem: HTML_ELEMS.page_link
+                }
+            );
+
+            fillEmptyNavSections(
+                HTML_ELEMS.nav_link_lists,
+                ['nav-list__inner-item_inactive']
+            );
+
+            initSidebarMove(
+                document.querySelector('.sidebar'),
+                document.querySelector('.sidebar-shadow'),
+                document.querySelector('.header-inner__sidebar-toggle'),
+                document.querySelector('.sidebar-toggle__open-icon'),
+                document.querySelector('.sidebar-toggle__close-icon')
+            );
+        }
+    });
+});
