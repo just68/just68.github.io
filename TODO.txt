@@ -1,4 +1,0 @@
-Адаптив
-window.history - https://doka.guide/js/window-history/
-убрать баги верстки
-сделать на модулях - https://learn.javascript.ru/modules-intro

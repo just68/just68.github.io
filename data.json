@@ -2,12 +2,6 @@
   "nav_sections": [
     {
       "section_title": "HOME"
-    },
-    {
-      "section_title": "test"
-    },
-    {
-      "section_title": "empty"
     }
   ],
   "pages": [
@@ -15,16 +9,6 @@
       "title": "Home",
       "url": "pages/home/",
       "section_id": "0"
-    },
-    {
-      "title": "Test page",
-      "url": "pages/test/",
-      "section_id": "1"
-    },
-    {
-      "title": "Some site (www.google.com)",
-      "url": "https://www.google.com",
-      "section_id": "1"
     }
   ]
 }
