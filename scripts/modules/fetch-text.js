@@ -1,6 +1,6 @@
-export async function fetchHTML(url) {
+export async function fetchText(url) {
     try {
-        const response = await fetch(url + 'index.html');
+        const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

@@ -1,5 +1,5 @@
-import {fetchJSON} from './modules/fetch_json.js';
-import {fetchHTML} from './modules/fetch_html.js';
+import {fetchJSON} from './modules/fetch-json.js';
+import {fetchText} from './modules/fetch-text.js';
 
 function fixElementsSizes(elems) {
     function updateSizes() {
@@ -13,15 +13,24 @@ function fixElementsSizes(elems) {
     window.addEventListener('resize', updateSizes);
 }
 
-function showPage(pagesData, currentPageID, titleElem, contentElem, linkElem) {
+function showPage(pagesData, currentPageID, titleElem, contentElem, pageStyleElem) {
     const CURRENT_PAGE_DATA = pagesData[currentPageID];
 
-    fetchHTML(CURRENT_PAGE_DATA['url']).then(html => {
+    fetchText(CURRENT_PAGE_DATA['url'] + 'index.html').then(html => {
         if (html) {
+            pageStyleElem.innerHTML = '';
             titleElem.innerHTML = CURRENT_PAGE_DATA.title;
             contentElem.innerHTML = html;
-            linkElem.href = CURRENT_PAGE_DATA['url'] + 'styles.css';
-            window.history.replaceState({'page_id': currentPageID}, CURRENT_PAGE_DATA['title'], `?page_id=${currentPageID}`);
+
+            fetchText(CURRENT_PAGE_DATA['url'] + 'styles.css').then(css => {
+                if (css) {
+                    pageStyleElem.innerHTML = css;
+                } else {
+                    console.warn('(No styles.css file)')
+                }
+            });
+
+            window.history.pushState({'page_id': currentPageID}, CURRENT_PAGE_DATA['title'], `?page_id=${currentPageID}`);
         }
     });
 }
@@ -133,9 +142,9 @@ function initSidebarMove(sidebar, sidebarShadow, sidebarToggle, sidebarOpenIcon,
         }, 200);
         sidebar.style.left = '0';
         if (isOnSmallScreen) {
-            sidebarShadow.style.width = '0';
+            sidebarShadow.style.minWidth = '0';
         } else {
-            sidebarShadow.style.width = sidebar.offsetWidth  + 'px';
+            sidebarShadow.style.minWidth = sidebar.offsetWidth  + 'px';
         }
         isSidebarOpened = true;
     }
@@ -148,7 +157,7 @@ function initSidebarMove(sidebar, sidebarShadow, sidebarToggle, sidebarOpenIcon,
             sidebarToggle.style.border = '2px solid rgb(255, 255, 255)';
         }, 200);
         sidebar.style.left = -sidebar.offsetWidth + 'px';
-        sidebarShadow.style.width = '0';
+        sidebarShadow.style.minWidth = '0';
         isSidebarOpened = false;
     }
 }
@@ -161,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
             sidebar: document.querySelector('.sidebar'),
             page: document.querySelector('.page-wrapper__page')
         },
-        page_link: document.querySelector('.page-link-elem'),
+        page_style: document.querySelector('.page-styles-elem'),
         nav: document.querySelector('.nav'),
         page_title: document.querySelector('.page-wrapper__page-title'),
         page_content: document.querySelector('.page-wrapper__page-content'),
@@ -184,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 currentPageID,
                 HTML_ELEMS.page_title,
                 HTML_ELEMS.page_content,
-                HTML_ELEMS.page_link,
+                HTML_ELEMS.page_style,
             );
 
             window.addEventListener("popstate", () => {
@@ -196,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     currentPageID,
                     HTML_ELEMS.page_title,
                     HTML_ELEMS.page_content,
-                    HTML_ELEMS.page_link,
+                    HTML_ELEMS.page_style,
                 );
             });
 
@@ -215,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     titleElem: HTML_ELEMS.page_title,
                     contentElem: HTML_ELEMS.page_content,
-                    linkElem: HTML_ELEMS.page_link
+                    linkElem: HTML_ELEMS.page_style
                 }
             );
 

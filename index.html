@@ -9,35 +9,51 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/pages_style.css">
-    <link rel="stylesheet" class="page-link-elem">
+    <link rel="stylesheet" href="styles/pages-style.css">
+    <style class="page-styles-elem"></style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>It`s just a website</title>
 </head>
 <body>
+    <div class="overlay">
+
+    </div>
     <header>
         <div class="header-inner">
             <div class="header-inner__sidebar-toggle">
-                <img src="assets/icons/close_menu_icon_24.svg" alt class="sidebar-toggle__icon sidebar-toggle__close-icon">
-                <img src="assets/icons/menu_icon_24.svg" alt class="sidebar-toggle__icon sidebar-toggle__open-icon">
+                <img src="assets/icons/close-menu-icon-24.svg" alt class="sidebar-toggle__icon sidebar-toggle__close-icon">
+                <img src="assets/icons/menu-icon-24.svg" alt class="sidebar-toggle__icon sidebar-toggle__open-icon">
             </div>
-            <p class="header-inner__logo">JUST A WEBSITE</p>
+            <h1 class="header-inner__logo">JUST A WEBSITE</h1>
         </div>
         <div class="header-inner-shadow"></div>
     </header>
     <main>
         <aside class="sidebar">
             <div class="sidebar__section">
-                <p class="sidebar-section__title">Navigation</p>
+                <h3 class="sidebar-section__title">Navigation</h3>
                 <nav class="sidebar-section__inner nav"></nav>
-                <p class="sidebar-section__info">sections are updated over time</p>
+                <h6 class="sidebar-section__info">sections are updated over time</h6>
+            </div>
+            <div class="sidebar__section">
+                <h3 class="sidebar-section__title">Contacts</h3>
+                <div class="sidebar-section__inner contacts">
+                    <div class="contacts__item">
+                        <p class="contacts__item-label">Email:</p>
+                        <p class="contacts__item-text">its.just68@mail.ru</p>
+                    </div>
+                    <div class="contacts__item">
+                        <p class="contacts__item-label">Phone:</p>
+                        <p class="contacts__item-text">haha not now bro :D</p>
+                    </div>
+                </div>
             </div>
         </aside>
         <div class="sidebar-shadow"></div>
         <div class="page-wrapper">
             <div class="page-wrapper__page">
-                <p class="page-wrapper__page-title"></p>
+                <h3 class="page-wrapper__page-title"></h3>
                 <div class="page-wrapper__page-content"></div>
             </div>
             <footer>

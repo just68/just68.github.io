@@ -1,0 +1,14 @@
+.page-body {
+  flex-grow: 1;
+}
+.page-body > h3 {
+
+}
+.page-body > p {
+  text-align: justify;
+  margin: 0.8em 0;
+}
+.page-body > p span {
+  display: inline-block;
+  width: 1em;
+}

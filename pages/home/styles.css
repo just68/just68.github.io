@@ -3,39 +3,20 @@
   justify-content: center;
   align-items: center;
   font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
 }
 .page-body__text-wrapper {
   width: 100%;
-  max-width: 650px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 0 1.5em;
 }
 .page-body__greeting-text {
   text-align: center;
-  font-size: 2.5em;
   margin-bottom: 1em;
 }
-.page-body__text, .page-body__with-respect-text {
-  font-size: 1.25em;
-}
 .page-body__text {
-  margin: 0.75em 0;
+  text-align: justify;
 }
 .page-body__with-respect-text {
   text-align: end;
   margin-top: 1em;
-}
-@media (max-width: 460px) {
-  .page-body__text-wrapper {
-    padding: 0;
-  }
-  .page-body__greeting-text {
-    margin-bottom: 0.6em;
-    font-size: 2em;
-  }
-  .page-body__text, .page-body__with-respect-text {
-    font-size: 1em;
-  }
 }

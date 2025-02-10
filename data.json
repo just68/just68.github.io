@@ -1,7 +1,22 @@
 {
   "nav_sections": [
     {
-      "section_title": "HOME"
+      "section_title": "Home, sweet home"
+    },
+    {
+      "section_title": "HTML"
+    },
+    {
+      "section_title": "CSS"
+    },
+    {
+      "section_title": "JavaScript"
+    },
+    {
+      "section_title": "Git"
+    },
+    {
+      "section_title": "My projects"
     }
   ],
   "pages": [
@@ -9,6 +24,36 @@
       "title": "Home",
       "url": "pages/home/",
       "section_id": "0"
+    },
+
+    {
+      "title": "HTML history (briefly)",
+      "url": "pages/html-history/",
+      "section_id": "1"
+    },
+
+    {
+      "title": "CSS history (briefly)",
+      "url": "pages/css-history/",
+      "section_id": "2"
+    },
+
+    {
+      "title": "JavaScript history (briefly)",
+      "url": "pages/javascript-history/",
+      "section_id": "3"
+    },
+
+    {
+      "title": "Git and GitHub history (briefly)",
+      "url": "pages/git-and-github-history/",
+      "section_id": "4"
+    },
+
+    {
+      "title": "nothing",
+      "url": "https://github.com/just68/nothing",
+      "section_id": "5"
     }
   ]
 }
