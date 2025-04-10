@@ -1,0 +1,34 @@
+.canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+.page { }
+
+.main { }
+.section { }
+.section__inner {
+  width: 100%;
+  min-height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2.4em;
+}
+.section__title {
+  padding: 1.2em 0;
+  font-size: 2em;
+  font-weight: 600;
+}
+
+.footer {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+}
+.footer__inner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.2em 2.4em;
+}
+.footer__copyright { }

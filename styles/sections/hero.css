@@ -1,0 +1,42 @@
+.section--hero { }
+.section__inner--hero {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.typewriter {
+  padding: 0.25em 0.45em;
+  text-align: center;
+  font-weight: 600;
+  font-size: 2.6em;
+  border-radius: 10px;
+  backdrop-filter: blur(6px);
+}
+.typewriter > .letter {
+  opacity: 0;
+  animation: letterAppear 0.3s ease forwards;
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding-bottom: 1.2em;
+  text-align: center;
+  font-size: 1.1em;
+  transition: opacity 0.2s ease;
+}
+.scroll-indicator__arrow {
+  display: inline-block;
+  padding-left: 1.2em;
+  transform: rotate(90deg);
+}
+
+@keyframes letterAppear {
+  to {
+      opacity: 1;
+  }
+}

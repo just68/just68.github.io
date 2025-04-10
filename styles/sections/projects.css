@@ -1,0 +1,21 @@
+.section--projects {
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(6px);
+}
+.section__inner--projects {
+  display: flex;
+  flex-direction: column;
+}
+.projects {
+  flex-grow: 1;
+  display: inherit;
+  flex-direction: inherit;
+  justify-content: center;
+  align-items: center;
+}
+
+.projects__placeholder {
+  text-align: center;
+  font-size: 1.4em;
+  opacity: 0.5;
+}
