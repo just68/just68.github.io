@@ -23,7 +23,7 @@ const typewriter = () => {
     if (!currentPhrase || letterIndex >= currentPhrase.length) return;
 
     const typewriterLetterElem = document.createElement('span');
-    typewriterLetterElem.classList.add('letter');
+    typewriterLetterElem.classList.add('typewriter__letter');
     typewriterElem.appendChild(typewriterLetterElem);
     typewriterLetterElem.innerHTML = currentPhrase[letterIndex];
 
@@ -56,7 +56,9 @@ const stopTyping = () => {
 
 const deleteLetter = () => {
     if (!typewriterElem) return;
-    const letters = typewriterElem.querySelectorAll('.letter');
+
+    const letters = typewriterElem.querySelectorAll('.typewriter__letter')
+
     if (letters.length > 0) {
         typewriterElem.removeChild(letters[letters.length - 1]);
     }

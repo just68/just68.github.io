@@ -1,6 +1,6 @@
 .section--projects {
-  background-color: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(6px);
+  background-color: rgba(25, 50, 0, 0.15);
+  backdrop-filter: blur(4px);
 }
 .section__inner--projects {
   display: flex;
@@ -16,6 +16,6 @@
 
 .projects__placeholder {
   text-align: center;
-  font-size: 1.4em;
+  font-size: 1.5em;
   opacity: 0.5;
 }
