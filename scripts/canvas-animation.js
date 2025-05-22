@@ -111,7 +111,6 @@ const Snake = class {
         this.segments.pop();
 
         if (this.checkCollisionOfSelf()) {
-            console.log('Snake died from self-collision at', this.head.x, this.head.y);
             this.isAlive = false;
         }
     }
