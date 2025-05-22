@@ -1,8 +1,7 @@
 const typewriterElem = document.querySelector('.typewriter');
 const phraseList = [
     'Hello',
-    'I`m just',
-    'just68',
+    'I`m morukek',
     'A web developer',
     'This is my personal space',
     'This is just a website',
@@ -11,7 +10,7 @@ let phraseIndex = 0;
 let letterIndex = 0;
 let typingInterval = null;
 const letterTypingDelay = 200;
-const phraseTypingDelay = 1000;
+const phraseTypingDelay = 2000;
 const letterDeletingDelay = 100;
 let isDeleting = false;
 let isWaitingForNextPhrase = false;
@@ -44,14 +43,12 @@ const typewriter = () => {
 const startTyping = () => {
     if (typingInterval) return;
     typingInterval = setInterval(typewriter, letterTypingDelay);
-    console.log("started typing");
 }
 
 const stopTyping = () => {
     if (!typingInterval) return;
     clearInterval(typingInterval);
     typingInterval = null;
-    console.log("stopped typing");
 }
 
 const deleteLetter = () => {
@@ -95,7 +92,6 @@ const startListeningTypewriterScrollPosition = () => {
         const rect = typewriterElem.getBoundingClientRect();
         const windowHeight = window.innerHeight;
 
-        const wasVisible = isTypewriterVisible;
         isTypewriterVisible = rect.top < windowHeight && rect.bottom > 0;
 
         if (!isTypewriterVisible && typingInterval) {

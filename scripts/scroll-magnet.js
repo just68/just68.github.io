@@ -1,5 +1,5 @@
-const sectionElems = document.querySelectorAll('section');
-const footerElem = document.querySelector('footer');
+const sectionElems = document.querySelectorAll('.section');
+const footerElem = document.querySelector('.footer');
 const scrollItTextElem = document.querySelector('.scroll-indicator');
 const animationDuration = 300;
 const delayBeforeAnimation = 400;
@@ -11,8 +11,8 @@ const findMostVisibleSection = () => {
     let maxVisibleHeight = 0;
 
     sectionElems.forEach(sectionElem => {
-        const rect = sectionElem.getBoundingClientRect();
-        const sectionHeight = rect.height;
+        const sectionRect = sectionElem.getBoundingClientRect();
+        const sectionHeight = sectionRect.height;
         const viewportHeight = window.innerHeight;
 
         // Skip sections that are taller than viewport
@@ -20,7 +20,7 @@ const findMostVisibleSection = () => {
             return;
         }
 
-        const visibleHeight = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0);
+        const visibleHeight = Math.min(sectionRect.bottom, viewportHeight) - Math.max(sectionRect.top, 0);
 
         if (visibleHeight > maxVisibleHeight) {
             maxVisibleHeight = visibleHeight;
