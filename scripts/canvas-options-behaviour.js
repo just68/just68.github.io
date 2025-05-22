@@ -158,7 +158,6 @@ const createDebugVisibilityControl = () => {
 
     const updateVisibility = () => {
         const isDebug = canvasSettings.getSetting('isDebugMode');
-        console.log(isDebug)
         toggleRadioIcons(showIcon, hideIcon, isDebug);
     };
 
