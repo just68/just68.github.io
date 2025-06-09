@@ -2,14 +2,14 @@ import { canvasSettings } from './canvas-options-behaviour.js';
 
 const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+}
 
 const getRandomRGBColor = () => {
     const r = getRandomInt(0, 255);
     const g = getRandomInt(0, 255);
     const b = getRandomInt(0, 255);
     return `rgb(${r}, ${g}, ${b})`;
-};
+}
 
 const Snake = class {
     constructor(canvas, ctx, gridConfig, cellsList) {
@@ -111,7 +111,6 @@ const Snake = class {
         this.segments.pop();
 
         if (this.checkCollisionOfSelf()) {
-            console.log('Snake died from self-collision at', this.head.x, this.head.y);
             this.isAlive = false;
         }
     }
@@ -223,7 +222,7 @@ const Food = class {
         this.ctx.fillStyle = this.color;
         this.ctx.fillRect(x, y, size, size);
     }
-};
+}
 
 const Game = class {
     constructor(canvas, canvasSettings) {
@@ -234,8 +233,16 @@ const Game = class {
         this.cellsList = [];
         this.snakeList = [];
         this.foodList = [];
+        this.lastSaveTime = 0;
         this.createGrid();
+        this.loadCanvasDataFromLocalStorage();
         window.game = this; // available global
+
+        this.saveCanvasDataInterval = 10000;
+        setInterval(() => {
+            this.saveCanvasDataToLocalStorage();
+            console.log('saved');
+        }, this.saveCanvasDataInterval);
     }
 
     createGrid() {
@@ -258,6 +265,38 @@ const Game = class {
         this.canvas.height = window.innerHeight;
         this.createGrid();
     }
+
+    loadCanvasDataFromLocalStorage()  {
+        const savedData = JSON.parse(localStorage.getItem('SavedCanvasData'));
+
+        if (savedData) {
+            savedData.snakeList.forEach(savedSnake => {
+                const newSnake = new Snake(this.canvas, this.ctx, this.config['grid'], this.cellsList);
+                newSnake.segments = savedSnake.segments;
+                newSnake.direction = savedSnake.direction;
+                newSnake.color = savedSnake.color;
+                newSnake.isAlive = savedSnake.isAlive;
+                this.snakeList.push(newSnake);
+            });
+
+            savedData.foodList.forEach(savedFood => {
+                const newFood = new Food(this.canvas, this.ctx, this.config['grid'], this.cellsList);
+                newFood.x = savedFood.x;
+                newFood.y = savedFood.y;
+                newFood.color = savedFood.color;
+                this.foodList.push(newFood);
+            });
+        }
+    }
+
+    saveCanvasDataToLocalStorage() {
+        localStorage.setItem('SavedCanvasData', JSON.stringify({}));
+        localStorage.setItem('SavedCanvasData', JSON.stringify({
+            'snakeList': this.snakeList,
+            'foodList': this.foodList
+        }));
+    }
+
 
     checkCollisionSomeSnakeAndFood() {
         for (let i = this.foodList.length - 1; i >= 0; i--) {
@@ -393,7 +432,7 @@ const Game = class {
             this.ctx.fillText(text, panelX + 15, yOffset);
             this.ctx.font = "13px 'Consolas', monospace";
             yOffset += 25;
-        };
+        }
 
         const drawText = (text, color = '#fff', indented = false) => {
             if (yOffset > panelY + panelHeight - lineHeight) return false;
@@ -401,7 +440,7 @@ const Game = class {
             this.ctx.fillText(text, panelX + (indented ? indent : 15), yOffset);
             yOffset += lineHeight;
             return true;
-        };
+        }
 
         // Game Performance
         drawSectionHeader('Performance');

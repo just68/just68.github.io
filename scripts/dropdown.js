@@ -1,19 +1,32 @@
 export const Dropdown = class  {
-    constructor(toggle, toggleIndicator, content) {
+    constructor(toggle, toggleIndicator, content, contentInner) {
+        this.isOpen = localStorage.getItem('IsDropdownOpen') === 'true';
         this.toggleElem = toggle;
         this.toggleIndicatorElem = toggleIndicator;
         this.contentElem = content;
+        this.contentInnerElem = contentInner;
+        this.contentInnerElemHeight = this.contentInnerElem.offsetHeight;
+    }
+
+    toggle() {
+        this.contentInnerElemHeight = this.contentInnerElem.offsetHeight;
+
+        if (this.isOpen) {
+            this.toggleIndicatorElem.classList.add('active');
+            this.contentElem.style.height = this.contentInnerElemHeight + 'px';
+        } else {
+            this.toggleIndicatorElem.classList.remove('active');
+            this.contentElem.style.height = '0';
+        }
     }
 
     addHandler() {
+        this.toggle();
+        
         this.toggleElem.addEventListener('click', () => {
-            if (this.contentElem.classList.contains('active')) {
-                this.toggleIndicatorElem.classList.remove('active');
-                this.contentElem.classList.remove('active');
-            } else {
-                this.toggleIndicatorElem.classList.add('active');
-                this.contentElem.classList.add('active');
-            }
+            this.isOpen = !this.isOpen;
+            this.toggle();
+            localStorage.setItem('IsDropdownOpen', this.isOpen);
         });
     }
 }

@@ -3,6 +3,7 @@ export const CanvasSettings = class {
         this.defaultSettings = {
             snakeCount: 10,
             fps: 15,
+            lastFps: 15,
             grid: {
                 size: 8,
                 gap: 4
@@ -16,11 +17,11 @@ export const CanvasSettings = class {
     }
 
     saveSettings() {
-        localStorage.setItem('canvasSettings', JSON.stringify(this.settings));
+        localStorage.setItem('CanvasSettings', JSON.stringify(this.settings));
     }
 
     loadSettings() {
-        const savedSettings = localStorage.getItem('canvasSettings');
+        const savedSettings = localStorage.getItem('CanvasSettings');
         if (savedSettings) {
             this.settings = { ...this.settings, ...JSON.parse(savedSettings) };
         } else {
