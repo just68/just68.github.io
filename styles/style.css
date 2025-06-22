@@ -11,7 +11,7 @@
     position: fixed;
     bottom: 1em;
     left: 1.75em;
-    width: 220px;
+    width: fit-content;
     background-color: rgba(0, 0, 0, 0.2);
     box-shadow: 0 0 8px 0 rgba(255, 255, 255, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -66,6 +66,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    gap: 0.5em;
 }
 
 .canvas-options__option-title {
@@ -95,9 +96,9 @@
 
 .canvas-options__count-text {
     display: inline-block;
-    min-width: 1.5em;
+    min-width: 1.2em;
     text-align: center;
-    font-size: 1.5em;
+    font-size: 1em;
 }
 
 .canvas-options__reset-icon {
@@ -138,9 +139,7 @@
 }
 .input-field {
     width: 100%;
-    /*padding: 0.5em 1.75em 0.25em 1.75em;*/
     text-align: center;
-    /*line-height: 1;*/
     font-size: 2em;
 }
 
@@ -166,6 +165,7 @@
 }
 
 .links__title {
+    position: relative;
     padding: 0.7em;
     text-align: center;
     font-size: 1.5em;
@@ -175,6 +175,21 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
+}
+
+.links__title::before, .links__title::after {
+    content: '~';
+    position: absolute;
+    top: 0.7em;
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.links__title::before {
+    left: 0.7em;
+}
+
+.links__title::after {
+    right: 0.7em;
 }
 
 .link {
@@ -206,7 +221,6 @@
 }
 
 .link__text {
-    line-height: 1;
     text-align: center;
     font-size: 1.5em;
     white-space: nowrap;

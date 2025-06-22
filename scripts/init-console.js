@@ -1,12 +1,15 @@
 import { Console } from './console/console.js';
 
 const inputElem = document.querySelector('.input-field')
-const consoleInstance = new Console(inputElem);
-
+const console = new Console(inputElem);
 const areYouNewHere = !localStorage.getItem('AreYouNewHere');
 
 if (areYouNewHere) {
-    await consoleInstance.executeCommand('typewriter');
+    localStorage.setItem('PlaceholderState', 'wow');
+    await console.executeCommand('typewriter');
 } else {
-    await consoleInstance.executeCommand('welcome');
+    localStorage.setItem('PlaceholderState', 'default');
+    await console.executeCommand('welcome');
 }
+
+await console.executeCommand('placeholder');

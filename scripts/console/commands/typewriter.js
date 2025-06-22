@@ -1,4 +1,6 @@
 const command = async (inputElem) => {
+    if (localStorage.getItem('AreYouNewHere') === 'false') return false;
+
     const phrases = [
         'Hello',
         'I`m morukek',

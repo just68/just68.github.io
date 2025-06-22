@@ -1,4 +1,4 @@
-import { canvasSettings } from './canvas-options-behaviour.js';
+import { canvasOptions } from './canvas-options-contol.js';
 
 const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -224,24 +224,22 @@ const Food = class {
     }
 }
 
-const Game = class {
-    constructor(canvas, canvasSettings) {
+export const Game = class {
+    constructor(canvas, canvasOptions) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         if (!this.ctx) alert('Canvas not supported in your browser :(');
-        this.config = canvasSettings.getSetting();
+        this.config = canvasOptions.get();
         this.cellsList = [];
         this.snakeList = [];
         this.foodList = [];
-        this.lastSaveTime = 0;
         this.createGrid();
-        this.loadCanvasDataFromLocalStorage();
+        this.loadCanvasData();
         window.game = this; // available global
 
         this.saveCanvasDataInterval = 10000;
         setInterval(() => {
-            this.saveCanvasDataToLocalStorage();
-            console.log('saved');
+            this.saveCanvasData();
         }, this.saveCanvasDataInterval);
     }
 
@@ -266,11 +264,11 @@ const Game = class {
         this.createGrid();
     }
 
-    loadCanvasDataFromLocalStorage()  {
-        const savedData = JSON.parse(localStorage.getItem('SavedCanvasData'));
+    loadCanvasData()  {
+        try {
+            const savedData = JSON.parse(localStorage.getItem('CanvasData'));
 
-        if (savedData) {
-            savedData.snakeList.forEach(savedSnake => {
+            savedData.snakeList.forEach(savedSnake => {  
                 const newSnake = new Snake(this.canvas, this.ctx, this.config['grid'], this.cellsList);
                 newSnake.segments = savedSnake.segments;
                 newSnake.direction = savedSnake.direction;
@@ -279,21 +277,37 @@ const Game = class {
                 this.snakeList.push(newSnake);
             });
 
-            savedData.foodList.forEach(savedFood => {
+            savedData.foodList.forEach(savedFood => {    
                 const newFood = new Food(this.canvas, this.ctx, this.config['grid'], this.cellsList);
                 newFood.x = savedFood.x;
                 newFood.y = savedFood.y;
                 newFood.color = savedFood.color;
                 this.foodList.push(newFood);
             });
+        } catch (error) {
+            this.snakeList = [];
+            this.foodList = [];
         }
     }
 
-    saveCanvasDataToLocalStorage() {
-        localStorage.setItem('SavedCanvasData', JSON.stringify({}));
-        localStorage.setItem('SavedCanvasData', JSON.stringify({
-            'snakeList': this.snakeList,
-            'foodList': this.foodList
+    saveCanvasData() {
+        const snakeData = this.snakeList.map(snake => ({
+            segments: snake.segments,
+            direction: snake.direction,
+            color: snake.color,
+            isAlive: snake.isAlive
+        }));
+
+        const foodData = this.foodList.map(food => ({
+            x: food.x,
+            y: food.y,
+            color: food.color
+        }));
+
+        localStorage.setItem('CanvasData', JSON.stringify({}));
+        localStorage.setItem('CanvasData', JSON.stringify({
+            'snakeList': snakeData,
+            'foodList': foodData
         }));
     }
 
@@ -378,7 +392,7 @@ const Game = class {
 
     listenFPSChange() {
         const listenFPSChangeInterval = setInterval(() => {
-            this.config = canvasSettings.getSetting();
+            this.config = canvasOptions.get();
 
             if (this.config['fps'] >  0) {
                 this.animate();
@@ -544,7 +558,7 @@ const Game = class {
 
     animate() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.config = canvasSettings.getSetting();
+        this.config = canvasOptions.get();
 
         this.snakeList = this.snakeList.filter(snake => snake.isAlive);
 
@@ -593,7 +607,21 @@ const Game = class {
     stop() {
         this.listenFPSChange();
     }
+
+    // ?
+    // reset() {
+    //     localStorage.removeItem('SavedCanvasData');
+    //
+    //     this.snakeList = [];
+    //     this.foodList = [];
+    //
+    //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    //
+    //     this.createGrid();
+    //
+    //     this.animate();
+    // }
 };
 
-const game = new Game(document.querySelector('.canvas'), canvasSettings);
-game.start();
+
+

@@ -4,6 +4,12 @@ export class Console {
         this.inputHandler = null;
         this.enterKeyHandler = null;
         this.backspaceKeyHandler = null;
+
+        this.systemCommands = [
+            'placeholder',
+            'typewriter', 
+            'welcome'
+        ];
     }
 
     async executeCommand(command) {
@@ -29,6 +35,19 @@ export class Console {
                 this.addEnterKeydownListener();
             } else {
                 this.addBackspaceKeydownHandler();
+            }
+
+            // For input placeholder:
+            const currentState = localStorage.getItem('PlaceholderState');
+
+            if (!this.systemCommands.includes(command)) {
+                if (currentState === 'wow') {
+                    localStorage.setItem('PlaceholderState', 'firstCommand');
+                    await this.executeCommand('placeholder');
+                } else if (currentState === 'firstCommand') {
+                    localStorage.setItem('PlaceholderState', 'default');
+                    await this.executeCommand('placeholder');
+                }
             }
         }
     }

@@ -1,8 +1,7 @@
 import { Dropdown } from './dropdown.js';
-import { CanvasSettings } from './canvas-settings.js';
+import { CanvasOptions } from './canvas-options.js';
 
 const elements = {
-    canvasOptions: document.querySelector('.canvas-options'),
     dropdownToggle: document.querySelector('.canvas-options__dropdown-toggle'),
     dropdownArrow: document.querySelector('.canvas-options__dropdown-arrow'),
     dropdownMenu: document.querySelector('.canvas-options__dropdown-menu'),
@@ -10,7 +9,7 @@ const elements = {
     page: document.querySelector('.page')
 }
 
-const canvasSettings = new CanvasSettings();
+const canvasOptions = new CanvasOptions();
 
 const createOptionElement = (title) => {
     const optionElem = document.createElement('div');
@@ -64,38 +63,39 @@ const createAnimationControl = () => {
     const stopIcon = optionElem.querySelector('.canvas-options__icon--stop');
 
     const updateIcons = () => {
-        const isPlaying = canvasSettings.getSetting('fps') !== 0;
+        const isPlaying = canvasOptions.get('fps') !== 0;
         startIcon.classList.toggle('hidden', isPlaying);
         stopIcon.classList.toggle('hidden', !isPlaying);
     }
     updateIcons();
 
     startIcon.addEventListener('click', () => {
-        canvasSettings.updateSetting('fps', canvasSettings.getSetting('lastFps'));
+        canvasOptions.update('fps', canvasOptions.get('lastFps'));
         updateIcons();
-        updateSettingsUI();
+        updateUI();
     });
     stopIcon.addEventListener('click', () => {
-        canvasSettings.updateSetting('lastFps', canvasSettings.getSetting('fps'));
-        canvasSettings.updateSetting('fps', 0);
+        canvasOptions.update('lastFps', canvasOptions.get('fps'));
+        canvasOptions.update('fps', 0);
         updateIcons();
-        updateSettingsUI();
+        updateUI();
     });
 }
 
 const createSnakeCountControl = () => {
     const optionElem = createOptionElement('Snake count');
-    optionElem.innerHTML += createCountControl('snake-count', canvasSettings.getSetting('snakeCount'));
+    optionElem.innerHTML += createCountControl('snake-count', canvasOptions.get('snakeCount'));
     elements.dropdownMenuContent.appendChild(optionElem);
 
     const decreaseBtn = optionElem.querySelector('.canvas-options__icon--snake-count-decrease');
     const increaseBtn = optionElem.querySelector('.canvas-options__icon--snake-count-increase');
     const countText = optionElem.querySelector('.canvas-options__snake-count-text');
+    countText.classList.add('canvas-options__count-text');
 
     const updateCount = (delta) => {
-        const newCount = canvasSettings.getSetting('snakeCount') + delta;
+        const newCount = canvasOptions.get('snakeCount') + delta;
         if (newCount >= 0 && newCount <= 50) {
-            canvasSettings.updateSetting('snakeCount', newCount);
+            canvasOptions.update('snakeCount', newCount);
             countText.textContent = newCount;
         }
     }
@@ -105,21 +105,22 @@ const createSnakeCountControl = () => {
 }
 
 const createFPSControl = () => {
-    const optionElem = createOptionElement('FPS');
-    optionElem.innerHTML += createCountControl('fps-count', canvasSettings.getSetting('fps'));
+    const optionElem = createOptionElement('FPS (speed)');
+    optionElem.innerHTML += createCountControl('fps-count', canvasOptions.get('fps'));
     elements.dropdownMenuContent.appendChild(optionElem);
 
     const decreaseBtn = optionElem.querySelector('.canvas-options__icon--fps-count-decrease');
     const increaseBtn = optionElem.querySelector('.canvas-options__icon--fps-count-increase');
     const countText = optionElem.querySelector('.canvas-options__fps-count-text');
+    countText.classList.add('canvas-options__count-text');
 
     const updateCount = (delta) => {
-        const newCount = canvasSettings.getSetting('fps') + delta;
+        const newCount = canvasOptions.get('fps') + delta;
         if (newCount >= 0 && newCount <= 120) {
-            canvasSettings.updateSetting('fps', newCount);
+            canvasOptions.update('fps', newCount);
             countText.textContent = newCount;
         }
-        updateSettingsUI();
+        updateUI();
     }
 
     decreaseBtn.addEventListener('click', () => updateCount(-1));
@@ -135,7 +136,7 @@ const createPageVisibilityControl = () => {
     const hideIcon = optionElem.querySelector('.canvas-options__icon--hide-page');
 
     const updateVisibility = () => {
-        const isHidden = canvasSettings.getSetting('isPageHidden');
+        const isHidden = canvasOptions.get('isPageHidden');
         if (isHidden) {
             elements.page.classList.add('hidden');
         } else {
@@ -146,11 +147,11 @@ const createPageVisibilityControl = () => {
     updateVisibility();
 
     showIcon.addEventListener('click', () => {
-        canvasSettings.updateSetting('isPageHidden', false);
+        canvasOptions.update('isPageHidden', false);
         updateVisibility();
     });
     hideIcon.addEventListener('click', () => {
-        canvasSettings.updateSetting('isPageHidden', true);
+        canvasOptions.update('isPageHidden', true);
         updateVisibility();
     });
 }
@@ -164,19 +165,19 @@ const createDebugVisibilityControl = () => {
     const hideIcon = optionElem.querySelector('.canvas-options__icon--hide-debug');
 
     const updateVisibility = () => {
-        const isDebug = canvasSettings.getSetting('isDebugMode');
+        const isDebug = canvasOptions.get('isDebugMode');
         toggleRadioIcons(showIcon, hideIcon, isDebug);
     };
 
     updateVisibility();
 
     showIcon.addEventListener('click', () => {
-        canvasSettings.updateSetting('isDebugMode', false);
+        canvasOptions.update('isDebugMode', false);
         updateVisibility();
     });
 
     hideIcon.addEventListener('click', () => {
-        canvasSettings.updateSetting('isDebugMode', true);
+        canvasOptions.update('isDebugMode', true);
         updateVisibility();
     });
 }
@@ -188,13 +189,13 @@ const createResetControl = () => {
 
     const resetBtn = optionElem.querySelector('.canvas-options__reset-icon');
     resetBtn.addEventListener('click', () => {
-        canvasSettings.resetSettings();
-        elements.dropdownMenuContent.innerHTML = '';
-        updateSettingsUI();
+        localStorage.setItem('SavedCanvasData', JSON.stringify({}));
+        canvasOptions.reset();
+        updateUI();
     });
 }
 
-const createSettingsUI = () => {
+const createUI = () => {
     elements.dropdownMenuContent.innerHTML = '';
     createAnimationControl();
     createSnakeCountControl();
@@ -204,22 +205,16 @@ const createSettingsUI = () => {
     createResetControl();
 }
 
-createSettingsUI();
-
-window.onload = () => {
-    const dropdownCanvasOptions = new Dropdown(
-        elements.dropdownToggle,
-        elements.dropdownArrow,
-        elements.dropdownMenu,
-        elements.dropdownMenuContent
-    );
-
-    dropdownCanvasOptions.addHandler();
-};
-
-const updateSettingsUI = () => {
+const updateUI = () => {
     elements.dropdownMenuContent.innerHTML = '';
-    createSettingsUI();
+    createUI();
 }
 
-export { canvasSettings }
+const dropdownCanvasOptions = new Dropdown(
+    elements.dropdownToggle,
+    elements.dropdownArrow,
+    elements.dropdownMenu,
+    elements.dropdownMenuContent
+);
+
+export { canvasOptions, createUI, dropdownCanvasOptions }
